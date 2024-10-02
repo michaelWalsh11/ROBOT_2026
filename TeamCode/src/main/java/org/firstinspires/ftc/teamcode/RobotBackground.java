@@ -2,18 +2,12 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
-import android.graphics.Color;
 import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 
@@ -54,16 +48,19 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
  *
  */
 
-public class LinearOpModeBackgroundInfoCopy {
+public class RobotBackground {
     /* Public Motors and Servos */
     public DcMotor leftFront   = null;
     public DcMotor rightFront  = null;
     public DcMotor leftRear    = null;
     public DcMotor rightRear   = null;
-    public DcMotor rightArm    = null;
-    public DcMotor leftArm     = null;
+    public DcMotor arm1    = null;
+    public DcMotor arm2     = null;
+    public DcMotor armMover1    = null;
+    public DcMotor armMover2     = null;
     public Servo rightHand    = null;
     public Servo leftHand   = null;
+    public Servo rotator = null;
 
     public   IMU imu;
     public double offset = 0;//in degrees
@@ -94,7 +91,7 @@ public class LinearOpModeBackgroundInfoCopy {
     private ElapsedTime period = new ElapsedTime();
 
     // Constructor - leave this blank for now
-    public LinearOpModeBackgroundInfoCopy () {
+    public RobotBackground () {
 
     }
 
@@ -108,14 +105,19 @@ public class LinearOpModeBackgroundInfoCopy {
         rightFront  = hwMap.dcMotor.get("rightFront");
         leftRear     = hwMap.dcMotor.get("leftBack");
         rightRear    = hwMap.dcMotor.get("rightBack");
-        leftArm      = hwMap.dcMotor.get("arm");
-        rightArm     = hwMap.dcMotor.get("armMover");
+        arm1      = hwMap.dcMotor.get("arm1");
+        armMover1     = hwMap.dcMotor.get("armMover1");
+        arm2      = hwMap.dcMotor.get("arm2");
+        armMover2     = hwMap.dcMotor.get("armMover2");
+        //rightHand     = hwMap.servo.get("unknown");
         leftFront.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightFront.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         leftRear.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightRear.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        leftArm.setDirection(DcMotor.Direction.FORWARD);
-        rightArm.setDirection(DcMotor.Direction.FORWARD);
+        arm1.setDirection(DcMotor.Direction.FORWARD);
+        arm2.setDirection(DcMotor.Direction.FORWARD);
+        armMover1.setDirection(DcMotor.Direction.FORWARD);
+        armMover2.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         leftFront.setPower(0);
@@ -131,10 +133,11 @@ public class LinearOpModeBackgroundInfoCopy {
         rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
-        //leftHand = hwMap.servo.get("lefthand");
-        //rightHand = hwMap.servo.get("righthand");
+        leftHand = hwMap.servo.get("deuce"); // broken (like a deuce)
+        rightHand = hwMap.servo.get("unknown"); // actual right hand
+        rotator = hwMap.servo.get("vic roy"); // I think rotator
         // leftHand.setPosition(MID_SERVO);
-        // rightHand.setPosition(MID_SERVO);
+        //rightHand.setPosition(MID_SERVO);
 
         // Define and Initialize Sensors
         //touch = hwMap.get(DigitalChannel.class, "touch");
