@@ -37,6 +37,7 @@ public class RoadrunnerDrive extends LinearOpMode
 
             robot.init(hardwareMap);
 
+
             robot.leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -53,23 +54,23 @@ public class RoadrunnerDrive extends LinearOpMode
                         -gamepad1.right_stick_x
                 ));
 
-                double leftX;
-                double leftY;
-                double rightX;
-
-                leftX = gamepad1.left_stick_x * DRIVE_SPEED;
-                leftY = gamepad1.left_stick_y * DRIVE_SPEED;
-                rightX = gamepad1.right_stick_x * DRIVE_SPEED;
-
-                double leftRearPower = leftY + leftX - rightX;
-                double leftFrontPower = leftY - leftX - rightX;
-                double rightRearPower = leftY - leftX + rightX;
-                double rightFrontPower = leftY + leftX + rightX;
-
-                robot.leftFront.setPower(leftFrontPower);
-                robot.leftRear.setPower(leftRearPower);
-                robot.rightFront.setPower(rightFrontPower);
-                robot.rightRear.setPower(rightRearPower);
+//                double leftX;
+//                double leftY;
+//                double rightX;
+//
+//                leftX = gamepad1.left_stick_x * DRIVE_SPEED;
+//                leftY = gamepad1.left_stick_y * DRIVE_SPEED;
+//                rightX = gamepad1.right_stick_x * DRIVE_SPEED;
+//
+//                double leftRearPower = leftY + leftX - rightX;
+//                double leftFrontPower = leftY - leftX - rightX;
+//                double rightRearPower = leftY - leftX + rightX;
+//                double rightFrontPower = leftY + leftX + rightX;
+//
+//                robot.leftFront.setPower(leftFrontPower);
+//                robot.leftRear.setPower(leftRearPower);
+//                robot.rightFront.setPower(rightFrontPower);
+//                robot.rightRear.setPower(rightRearPower);
 
 
 
@@ -84,6 +85,15 @@ public class RoadrunnerDrive extends LinearOpMode
                 packet.fieldOverlay().setStroke("#3F51B5");
                 Drawing.drawRobot(packet.fieldOverlay(), drive.pose);
                 FtcDashboard.getInstance().sendTelemetryPacket(packet);
+
+                Vector2d spot = new Vector2d(drive.pose.position.x, drive.pose.position.y);
+                //PoseVelocity2d velocity = new PoseVelocity2d(spot, drive.pose.heading.toDouble());
+                Pose2d pose = new Pose2d(drive.pose.position.x, drive.pose.position.y, drive.pose.heading.toDouble());
+                //drive.setDrivePowers(velocity);
+                drive.actionBuilder(pose).lineToX(100.0);
+                drive.actionBuilder(pose).turnTo(65.0);
+
+
             }
         }
     }

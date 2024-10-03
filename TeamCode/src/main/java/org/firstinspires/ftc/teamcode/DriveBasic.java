@@ -22,6 +22,8 @@ public class DriveBasic extends OpMode {
     private double ARM_SPEED = 0.7;
     private double ARM_SPEED_ANGLER = 0.7;
 
+    private double servoPos = 0.0;
+
     private int rotateArm;
     private double topRungArm_Speed;
 
@@ -116,14 +118,30 @@ public class DriveBasic extends OpMode {
 
 
         //swivel (switch for now bc im lazy) test
+//        if (gamepad1.dpad_left)
+//        {
+//            robot.rotator.setPosition(1);
+//        }
+//        if (gamepad1.dpad_right)
+//        {
+//            robot.rotator.setPosition(0);
+//        }
+
+        //im unlazy this might work but it will have unknown speed
+        if (gamepad1.dpad_up)
+        {
+            servoPos = servoPos + 0.05;
+        }
+        if (gamepad1.dpad_up)
+        {
+            servoPos = servoPos - 0.05; //adjust for speed
+        }
         if (gamepad1.dpad_left)
         {
-            robot.rotator.setPosition(1);
+            gamepad1.rumble(1000);
         }
-        if (gamepad1.dpad_right)
-        {
-            robot.rotator.setPosition(0);
-        }
+
+        robot.rotator.setPosition(servoPos);
 
 
         //drive
@@ -246,6 +264,16 @@ public class DriveBasic extends OpMode {
             armAnglerPos = -1450;
         }
 
+        if (gamepad1.x)
+        {
+            armAnglerPos = -1300;
+        }
+
+        if (gamepad1.b)
+        {
+            armAnglerPos = 1;
+        }
+
         robot.armMover1.setPower(0.8);
         robot.armMover1.setTargetPosition(armAnglerPos);
         robot.armMover1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -279,6 +307,15 @@ public class DriveBasic extends OpMode {
         {
             armPos = 0;
             ARM_SPEED = 0;
+        }
+
+        if (gamepad1.y)
+        {
+            armPos = 2500;
+        }
+        if (gamepad1.a)
+        {
+            armPos = -1;
         }
 
 
@@ -323,8 +360,6 @@ public class DriveBasic extends OpMode {
         telemetry.addLine("ArmAngler " + armAnglerPos);
         telemetry.addData("ArmAngler 2", dumbArmAnglerPos);
 
-
-
     }
 
     /*
@@ -335,5 +370,3 @@ public class DriveBasic extends OpMode {
     }
 
 }
-
-
