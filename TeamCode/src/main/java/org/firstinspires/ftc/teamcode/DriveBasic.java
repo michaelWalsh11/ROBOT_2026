@@ -104,14 +104,20 @@ public class DriveBasic extends OpMode {
     public void loop() {
 
 
+        //todo
+        // - hotkeys
+        // - try to fix the arm going down being ass movement
+        // - battery holder
+        // - fix the grasper
+        // - fix dangling wires
+
+
         //claw open random guesses needs to be tuned
-        if (gamepad1.right_bumper)
-        {
+        if (gamepad1.right_bumper) {
             robot.rightHand.setPosition(1); // right hand
             robot.leftHand.setPosition(0);
         }
-        if (gamepad1.left_bumper)
-        {
+        if (gamepad1.left_bumper) {
             robot.rightHand.setPosition(0); // right hand
             robot.leftHand.setPosition(1);
         }
@@ -128,20 +134,6 @@ public class DriveBasic extends OpMode {
 //        }
 
         //im unlazy this might work but it will have unknown speed
-        if (gamepad1.dpad_up)
-        {
-            servoPos = servoPos + 0.05;
-        }
-        if (gamepad1.dpad_up)
-        {
-            servoPos = servoPos - 0.05; //adjust for speed
-        }
-        if (gamepad1.dpad_left)
-        {
-            gamepad1.rumble(1000);
-        }
-
-        robot.rotator.setPosition(servoPos);
 
 
         //drive
@@ -218,28 +210,39 @@ public class DriveBasic extends OpMode {
 //        telemetry.addData("Right Rear Power", rightRearPower);
 
 
+        if (gamepad1.dpad_left) {
+            robot.rightHand.setPosition(1);
+            robot.leftHand.setPosition(0);
+
+        }
+        if (gamepad1.dpad_right) {
+            robot.rightHand.setPosition(0);
+            robot.leftHand.setPosition(1);
+
+        }
+
+        if (gamepad1.dpad_up) {
+            servoPos += 0.1;
+        }
+        if (gamepad1.dpad_down)
+        {
+            servoPos += -0.1;
+        }
+
+        if (gamepad2.dpad_right)
+        {
+            robot.rotator.setPosition(1);
+        }
+        if (gamepad2.dpad_left)
+        {
+            robot.rotator.setPosition(0);
+        }
 
 
+        robot.rotator.setPosition(servoPos);
 
+        telemetry.addLine("pos" + servoPos);
 
-        //if we have a claw we can use this
-//        if (gamepad1.right_bumper) {         // CLOSE
-//            robot.leftHand.setPosition(0);
-//            robot.rightHand.setPosition(1);
-//        }
-//        else if (gamepad1.left_bumper) {    // OPEN
-//            robot.leftHand.setPosition(1);
-//            robot.rightHand.setPosition(0);
-//        }
-
-
-        // Arm with DPADs for the funky JD arm
-//        if (gamepad1.dpad_up)
-//            robot.rightArm.setPower(0.5);
-//        else if (gamepad1.dpad_down)
-//            robot.rightArm.setPower(-0.5);
-//        else
-//            robot.rightArm.setPower(0.0);
 
         // Arm with DPADs for the funky JD arm
         double armAnglerMotorPower = gamepad2.right_trigger - gamepad2.left_trigger;
@@ -271,7 +274,7 @@ public class DriveBasic extends OpMode {
 
         if (gamepad1.b)
         {
-            armAnglerPos = 1;
+            armAnglerPos = 0;
         }
 
         robot.armMover1.setPower(0.8);
@@ -315,7 +318,7 @@ public class DriveBasic extends OpMode {
         }
         if (gamepad1.a)
         {
-            armPos = -1;
+            armPos = 0;
         }
 
 

@@ -31,7 +31,7 @@ public class Test extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        LinearOpModeBackgroundInfoCopy robot = new LinearOpModeBackgroundInfoCopy();
+        RobotBackground robot = new RobotBackground();
         HardwareMap HardwareMap;
         Pose2d pose = new Pose2d(0, 0, Math.toRadians(0));
         //MecanumDrive drive = new MecanumDrive(robot.hwMap, pose);
@@ -59,7 +59,7 @@ public class Test extends LinearOpMode {
     //then I will need to make a wait method to wait until the command is done being
     //completed and then have it find the next step although eventally I will need
     //a more efficent version this works for now to see if this actually works.
-    public static void testDrive(Directions directions, LinearOpModeBackgroundInfoCopy robot) {
+    public static void testDrive(Directions directions, RobotBackground robot) {
         for (String str: directions.getDirectionList())
         {
             double len = Double.parseDouble(str.substring(str.lastIndexOf(" "), str.length()));
