@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
 
 @TeleOp(name="BIG FELLA", group="Training")
@@ -105,9 +106,7 @@ public class DriveBasic extends OpMode {
 
 
         //todo
-        // - hotkeys
         // - try to fix the arm going down being ass movement
-        // - battery holder
         // - fix the grasper
         // - fix dangling wires
 
@@ -160,7 +159,6 @@ public class DriveBasic extends OpMode {
         //ai generated move code to test:
         //mine is above
 
-
         //also try these later
 
 //        leftX = gamepad1.left_stick_x;
@@ -210,56 +208,45 @@ public class DriveBasic extends OpMode {
 //        telemetry.addData("Right Rear Power", rightRearPower);
 
 
-        if (gamepad1.dpad_left) {
-            robot.rightHand.setPosition(1);
+        if (gamepad1.dpad_left || gamepad2.dpad_left) {
+            robot.rotator.setPosition(1);
             robot.leftHand.setPosition(0);
 
         }
-        if (gamepad1.dpad_right) {
-            robot.rightHand.setPosition(0);
-            robot.leftHand.setPosition(1);
-
-        }
-
-        if (gamepad1.dpad_up) {
-            servoPos += 0.1;
-        }
-        if (gamepad1.dpad_down)
-        {
-            servoPos += -0.1;
-        }
-
-        if (gamepad2.dpad_right)
-        {
-            robot.rotator.setPosition(1);
-        }
-        if (gamepad2.dpad_left)
-        {
+        if (gamepad1.dpad_right || gamepad2.dpad_right) {
             robot.rotator.setPosition(0);
+            robot.leftHand.setPosition(1);
         }
 
+        if (gamepad1.dpad_up || gamepad2.dpad_up)
+        {
+            servoPos = Math.min(servoPos + 0.05, 1.0);
+        }
+        if (gamepad1.dpad_down || gamepad2.dpad_down)
+        {
+            servoPos = Math.max(servoPos - 0.05, 0.0);
+        }
 
-        robot.rotator.setPosition(servoPos);
+        robot.rightHand.setPosition(servoPos);
 
         telemetry.addLine("pos" + servoPos);
 
 
-        // Arm with DPADs for the funky JD arm
+        // Arm with angler / trigger for the funky arm
         double armAnglerMotorPower = gamepad2.right_trigger - gamepad2.left_trigger;
         if (armAnglerMotorPower > 0.4) {
             ARM_SPEED_ANGLER = 0.9;
-            armAnglerPos += gamepad2.right_trigger * 20;
+            armAnglerPos -= gamepad2.right_trigger * 10;
         }
 
         if (armAnglerMotorPower < -0.4) {
             ARM_SPEED_ANGLER = 0.9;
-            armAnglerPos -= gamepad2.left_trigger * 20;
+            armAnglerPos += gamepad2.left_trigger * 10;
         }
 
         if (armAnglerPos > 0)
         {
             armAnglerPos = 0;
-            ARM_SPEED_ANGLER = 0;
         }
 
         if (armAnglerPos < -1450)
@@ -267,15 +254,15 @@ public class DriveBasic extends OpMode {
             armAnglerPos = -1450;
         }
 
-        if (gamepad1.x)
-        {
-            armAnglerPos = -1300;
-        }
-
-        if (gamepad1.b)
-        {
-            armAnglerPos = 0;
-        }
+//        if (gamepad1.x || gamepad2.x)
+//        {
+//            armAnglerPos = -1300;
+//        }
+//
+//        if (gamepad1.b || gamepad2.b)
+//        {
+//            armAnglerPos = 0;
+//        }
 
         robot.armMover1.setPower(0.8);
         robot.armMover1.setTargetPosition(armAnglerPos);
@@ -292,7 +279,7 @@ public class DriveBasic extends OpMode {
         double armMotorPower = gamepad1.right_trigger - gamepad1.left_trigger;
         if (armMotorPower > 0.4) {
             ARM_SPEED = 0.9;
-            armPos += gamepad1.right_trigger * 60;
+            armPos += gamepad1.right_trigger * 60.0;
         }
 
         if (armMotorPower < -0.4) {
@@ -312,11 +299,11 @@ public class DriveBasic extends OpMode {
             ARM_SPEED = 0;
         }
 
-        if (gamepad1.y)
+        if (gamepad1.y || gamepad2.y)
         {
             armPos = 2500;
         }
-        if (gamepad1.a)
+        if (gamepad1.a || gamepad2.a)
         {
             armPos = 0;
         }
