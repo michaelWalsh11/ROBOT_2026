@@ -164,7 +164,7 @@ public class DriveBasic extends OpMode {
 //        leftX = gamepad1.left_stick_x;
 //        leftY = gamepad1.left_stick_y;
 //        rightX = gamepad1.right_stick_x ;
-//        robot.driveFieldCentric(leftX, leftY, rightX, DRIVE_SPEED);
+//        //robot.driveFieldCentric(leftX, leftY, rightX, DRIVE_SPEED);
 //        robot.driveStrafer(leftX, leftY, rightX);
 
 //        double leftX = gamepad1.left_stick_x * DRIVE_SPEED;
@@ -220,11 +220,11 @@ public class DriveBasic extends OpMode {
 
         if (gamepad1.dpad_up || gamepad2.dpad_up)
         {
-            servoPos = Math.min(servoPos + 0.05, 1.0);
+            servoPos = Math.min(servoPos + 0.025, 1.0);
         }
         if (gamepad1.dpad_down || gamepad2.dpad_down)
         {
-            servoPos = Math.max(servoPos - 0.05, 0.0);
+            servoPos = Math.max(servoPos - 0.025, 0.0);
         }
 
         robot.rightHand.setPosition(servoPos);
@@ -327,10 +327,10 @@ public class DriveBasic extends OpMode {
         //show info slowbro (like the pokemon)
         telemetry.addLine("Wheels");
 
-        telemetry.addData("Left Front Power", leftFrontPower);
-        telemetry.addData("Left Rear Power", leftRearPower);
-        telemetry.addData("Right Front Power", rightFrontPower);
-        telemetry.addData("Right Rear Power", rightRearPower);
+//        telemetry.addData("Left Front Power", leftFrontPower);
+//        telemetry.addData("Left Rear Power", leftRearPower);
+//        telemetry.addData("Right Front Power", rightFrontPower);
+//        telemetry.addData("Right Rear Power", rightRearPower);
 
         telemetry.addLine("");
         telemetry.addLine("armMotorSpeeds");
