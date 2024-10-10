@@ -24,6 +24,7 @@ public class DriveBasic extends OpMode {
     private double ARM_SPEED_ANGLER = 0.7;
 
     private double servoPos = 0.0;
+    private double spinPos = 0.0;
 
     private int rotateArm;
     private double topRungArm_Speed;
@@ -206,15 +207,24 @@ public class DriveBasic extends OpMode {
 //        telemetry.addData("Left Rear Power", leftRearPower);
 //        telemetry.addData("Right Front Power", rightFrontPower);
 //        telemetry.addData("Right Rear Power", rightRearPower);
+        if (gamepad1.dpad_left)
+        {
+            spinPos += 0.025;
+        }
+        if (gamepad1.dpad_right)
+        {
+            spinPos -= 0.025;
+        }
 
+        robot.spinner.setPosition(spinPos);
 
         if (gamepad1.dpad_left || gamepad2.dpad_left) {
-            robot.rotator.setPosition(1);
+            robot.rightHand.setPosition(1);
             robot.leftHand.setPosition(0);
 
         }
         if (gamepad1.dpad_right || gamepad2.dpad_right) {
-            robot.rotator.setPosition(0);
+            robot.rightHand.setPosition(0);
             robot.leftHand.setPosition(1);
         }
 
@@ -227,7 +237,7 @@ public class DriveBasic extends OpMode {
             servoPos = Math.max(servoPos - 0.025, 0.0);
         }
 
-        robot.rightHand.setPosition(servoPos);
+        robot.rotator.setPosition(servoPos);
 
         telemetry.addLine("pos" + servoPos);
 
@@ -356,7 +366,10 @@ public class DriveBasic extends OpMode {
      * Code to run ONCE after the driver hits STOP
      */
     @Override
-    public void stop() {
+    public void stop()
+    {
+        //todo
+        //  N/A
     }
 
 }

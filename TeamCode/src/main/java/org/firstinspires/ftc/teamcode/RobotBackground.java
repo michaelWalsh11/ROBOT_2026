@@ -61,7 +61,7 @@ public class RobotBackground {
     public Servo rightHand    = null;
     public Servo leftHand   = null;
     public Servo rotator = null;
-    public Servo unk = null;
+    public Servo spinner = null;
 
     public   IMU imu;
     public double offset = 0;//in degrees
@@ -134,10 +134,10 @@ public class RobotBackground {
         rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
-        rotator = hwMap.servo.get("deuce"); // broken (like a deuce)
-        rightHand = hwMap.servo.get("unknown"); // actual right hand
+        rightHand = hwMap.servo.get("deuce"); // broken (like a deuce)
+        rotator = hwMap.servo.get("unknown"); // actual right hand
         leftHand = hwMap.servo.get("vic roy"); // I think rotator
-        unk = hwMap.servo.get("n");
+        spinner = hwMap.servo.get("n");
         // leftHand.setPosition(MID_SERVO);
         //rightHand.setPosition(MID_SERVO);
 
