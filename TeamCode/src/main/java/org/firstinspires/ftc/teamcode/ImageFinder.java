@@ -17,7 +17,7 @@ import java.util.List;
 
 import javax.crypto.ExemptionMechanism;
 
-@TeleOp(name = "FTC ImageScanner")
+@TeleOp(name = "Literronl an inch")
 public class ImageFinder extends LinearOpMode {
 
     OpenCvCamera webcam;
@@ -27,16 +27,18 @@ public class ImageFinder extends LinearOpMode {
     int armPos = 0;
     double wristPos = 0.0;
 
-    double centerWristPos = 0.0; //change to center wrist pos
-    double scanningWristPos = 0.0; // change to a good angle to scan
+    double centerWristPos = 0.725; //change to center wrist pos
+    double scanningWristPos = 0.4; // change to a good angle to scan
 
-    double rotatedAcceleration = 0.05;
-    double wristAcceleration = 0.05;
+    double rotatedAcceleration = 0.005;
+    double wristAcceleration = 0.01;
     int armAcceleration = 10;
 
 
     @Override
     public void runOpMode() {
+
+        robot.init(hardwareMap);
         // Initialize the camera
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -77,6 +79,9 @@ public class ImageFinder extends LinearOpMode {
         waitForStart();
 
         robot.rotator.setPosition(scanningWristPos);
+
+        robot.rightHand.setPosition(0.65);
+        robot.leftHand.setPosition(1);
 
         // While the OpMode is active, keep streaming and updating telemetry
         while (opModeIsActive()) {
@@ -261,7 +266,7 @@ public class ImageFinder extends LinearOpMode {
             }
             else if (mid2 < -15)
             {
-                wristPos -= wristAcceleration;
+                wristPos += wristAcceleration;
             }
             else {
                 armPos += 0;

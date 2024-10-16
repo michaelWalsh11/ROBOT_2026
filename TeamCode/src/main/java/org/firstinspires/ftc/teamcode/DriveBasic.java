@@ -16,15 +16,16 @@ public class DriveBasic extends OpMode {
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
 
     private int armPos;
-    private int dumbArmPos;
+    private int OArmPos;
     private int armAnglerPos;
-    private int dumbArmAnglerPos;
+    private int OArmAnglerPos;
 
     private double ARM_SPEED = 0.7;
     private double ARM_SPEED_ANGLER = 0.7;
 
     private double servoPos = 0.0;
     private double spinPos = 0.0;
+    private double handPos = 0.0;
 
     private int rotateArm;
     private double topRungArm_Speed;
@@ -34,14 +35,9 @@ public class DriveBasic extends OpMode {
     private double CLIMB_POWER = 0.8;
 
 
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
-    @Override
+    @Override /* * */
     public void init() {
-        /* Initialize the hardware variables.
-         * The init() method of the hardware class does all the work here
-         */
+
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
@@ -66,76 +62,207 @@ public class DriveBasic extends OpMode {
         robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
+        spinPos = robot.spinner.getPosition();
+        servoPos = robot.rotator.getPosition();
+
+
         armPos = robot.arm1.getCurrentPosition();
-        dumbArmPos = robot.arm2.getCurrentPosition();
+        OArmPos = robot.arm2.getCurrentPosition();
         armAnglerPos = robot.armMover1.getCurrentPosition();
-        dumbArmAnglerPos = robot.armMover2.getCurrentPosition();
+        OArmAnglerPos = robot.armMover2.getCurrentPosition();
 
 
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
-    public void init_loop() {
+    @Override /* * */
+    public void init_loop()
+    {
+
     }
 
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
-    @Override
-    public void start() {
 
+    @Override /* * */
+    public void start()
+    {
 
-        //armPos = 50; // Lifts Arm for Driving
     }
 
-    double previousLeftRearPower = 0.0;
-    double previousLeftFrontPower = 0.0;
-    double previousRightRearPower = 0.0;
-    double previousRightFrontPower = 0.0;
-
-    // Smoothing factor (value between 0 and 1)
-    double smoothingFactor = 0.8; // make bigger to smooth smaller to accelerate
-
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
-    @Override
+    @Override /* * */
     public void loop() {
 
+        drive();
+        grasper();
+        arms();
+        telemetry();
+    }
 
-        //todo
-        // - try to fix the arm going down being ass movement
-        // - fix the grasper
-        // - fix dangling wires
+    public void telemetry()
+    {
+        //show info slowbro (like the pokemon)
+        telemetry.addLine("Wheels");
 
+        telemetry.addLine("");
+        telemetry.addLine("armMotorSpeeds");
 
-        //claw open random guesses needs to be tuned
-        if (gamepad1.right_bumper) {
-            robot.rightHand.setPosition(1); // right hand
-            robot.leftHand.setPosition(0);
+        telemetry.addData("armSpeed", ARM_SPEED);
+        telemetry.addData("SpeedArmAngler", ARM_SPEED_ANGLER);
+
+        telemetry.addLine("");
+        telemetry.addLine("armPos");
+
+        telemetry.addLine("Arm " + armPos);
+        telemetry.addData("Arm 2", OArmPos);
+
+        telemetry.addLine("");
+        telemetry.addLine("ArmAnglers");
+
+        telemetry.addLine("ArmAngler " + armAnglerPos);
+        telemetry.addData("ArmAngler 2", OArmAnglerPos);
+
+        telemetry.addLine("");
+        telemetry.addLine("Servos");
+        telemetry.addLine("Graper1 " + robot.leftHand.getPosition());
+        telemetry.addLine("Grasper2" + robot.rightHand.getPosition());
+        telemetry.addLine("Spinner " + robot.spinner.getPosition());
+        telemetry.addLine("Rotator " + robot.rotator.getPosition());
+
+        //If daddy says
+        //baby does
+        //Never disobey daddy
+        //OR ELSE !!!!!
+        //(all said in a sigma alpha wolf tone)
+        // by Miller Moore
+    }
+
+    public void arms()
+    {
+        if (gamepad1.right_bumper)
+        {
+            ARM_SPEED_ANGLER = 0.9;
+            armAnglerPos += 10;
         }
         if (gamepad1.left_bumper) {
-            robot.rightHand.setPosition(0); // right hand
-            robot.leftHand.setPosition(1);
+            ARM_SPEED_ANGLER = 0.9;
+            armAnglerPos -= 10;
         }
 
+        if (armAnglerPos > 0)
+        {
+            armAnglerPos = 0;
+        }
 
-        //swivel (switch for now bc im lazy) test
-//        if (gamepad1.dpad_left)
-//        {
-//            robot.rotator.setPosition(1);
-//        }
-//        if (gamepad1.dpad_right)
-//        {
-//            robot.rotator.setPosition(0);
-//        }
+        if (armAnglerPos < -1450)
+        {
+            armAnglerPos = -1450;
+        }
 
-        //im unlazy this might work but it will have unknown speed
+        if (gamepad1.y)
+        {
+            armAnglerPos = -1400;
+        }
+        if (gamepad1.a)
+        {
+            armAnglerPos = 0;
+        }
+
+        robot.armMover1.setPower(0.8);
+        robot.armMover1.setTargetPosition(armAnglerPos);
+        robot.armMover1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armMover1.setPower(ARM_SPEED_ANGLER);
+
+        robot.armMover2.setPower(0.8);
+        robot.armMover2.setTargetPosition(-armAnglerPos);
+        robot.armMover2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armMover2.setPower(ARM_SPEED_ANGLER);
 
 
+        //armMover
+        double armMotorPower = gamepad1.right_trigger - gamepad1.left_trigger;
+        if (armMotorPower > 0.4) {
+            ARM_SPEED = 0.9;
+            armPos += (int) (gamepad1.right_trigger * 60.0);
+        }
+
+        if (armMotorPower < -0.4) {
+            ARM_SPEED = 0.9;
+            armPos -= (int) (gamepad1.left_trigger * 60.0);
+        }
+
+        if (armPos > 4300)
+        {
+            armPos = 4300;
+        }
+
+        if (armPos < 0)
+        {
+            armPos = 0;
+            ARM_SPEED = 0;
+        }
+
+        if (gamepad1.b && !gamepad1.start)
+        {
+            armPos = 2500;
+        }
+
+        if (gamepad1.a && !gamepad1.start)
+        {
+            armPos = 0;
+        }
+
+        //armMover Action
+        robot.arm1.setPower(armMotorPower);
+        robot.arm1.setTargetPosition(armPos);
+        robot.arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.arm1.setPower(ARM_SPEED);
+
+        robot.arm2.setPower(armMotorPower);
+        robot.arm2.setTargetPosition(-armPos);
+        robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.arm2.setPower(ARM_SPEED);
+    }
+
+    public void grasper()
+    {
+        //open and close grasper
+        if (gamepad2.right_trigger > 0.4)
+        {
+            robot.rightHand.setPosition(0.5);
+            robot.leftHand.setPosition(1);
+        }
+        if (gamepad2.left_trigger > 0.4)
+        {
+            robot.rightHand.setPosition(1);
+            robot.leftHand.setPosition(0.5);
+        }
+
+        //twist left and right
+        if (gamepad2.left_bumper)
+        {
+            spinPos = Math.max(spinPos + 0.01, 1.0);;
+        }
+        if (gamepad2.right_bumper)
+        {
+            spinPos = Math.min(spinPos - 0.01, 0.0);
+        }
+
+        robot.spinner.setPosition(spinPos);
+
+        //Probably
+        double RSY = gamepad2.right_stick_y;
+        if (RSY > 0.4)
+        {
+            servoPos = Math.max(servoPos + RSY * 0.01, 1.0);
+        }
+        if (RSY < -0.4)
+        {
+            servoPos = Math.min(servoPos + RSY * 0.01, 0.0);
+        }
+
+        robot.rotator.setPosition(servoPos);
+    }
+
+    public void drive()
+    {
         //drive
         double leftX;
         double leftY;
@@ -150,12 +277,10 @@ public class DriveBasic extends OpMode {
         double rightRearPower = leftY - leftX + rightX;
         double rightFrontPower = leftY + leftX + rightX;
 
-        if (!gamepad2.x) {
-            robot.leftFront.setPower(leftFrontPower);
-            robot.leftRear.setPower(leftRearPower);
-            robot.rightFront.setPower(rightFrontPower);
-            robot.rightRear.setPower(rightRearPower);
-        }
+        robot.leftFront.setPower(leftFrontPower);
+        robot.leftRear.setPower(leftRearPower);
+        robot.rightFront.setPower(rightFrontPower);
+        robot.rightRear.setPower(rightRearPower);
 
         //ai generated move code to test:
         //mine is above
@@ -207,159 +332,6 @@ public class DriveBasic extends OpMode {
 //        telemetry.addData("Left Rear Power", leftRearPower);
 //        telemetry.addData("Right Front Power", rightFrontPower);
 //        telemetry.addData("Right Rear Power", rightRearPower);
-        if (gamepad1.dpad_left)
-        {
-            spinPos += 0.025;
-        }
-        if (gamepad1.dpad_right)
-        {
-            spinPos -= 0.025;
-        }
-
-        robot.spinner.setPosition(spinPos);
-
-        if (gamepad1.dpad_left || gamepad2.dpad_left) {
-            robot.rightHand.setPosition(1);
-            robot.leftHand.setPosition(0);
-
-        }
-        if (gamepad1.dpad_right || gamepad2.dpad_right) {
-            robot.rightHand.setPosition(0);
-            robot.leftHand.setPosition(1);
-        }
-
-        if (gamepad1.dpad_up || gamepad2.dpad_up)
-        {
-            servoPos = Math.min(servoPos + 0.025, 1.0);
-        }
-        if (gamepad1.dpad_down || gamepad2.dpad_down)
-        {
-            servoPos = Math.max(servoPos - 0.025, 0.0);
-        }
-
-        robot.rotator.setPosition(servoPos);
-
-        telemetry.addLine("pos" + servoPos);
-
-
-        // Arm with angler / trigger for the funky arm
-        double armAnglerMotorPower = gamepad2.right_trigger - gamepad2.left_trigger;
-        if (armAnglerMotorPower > 0.4) {
-            ARM_SPEED_ANGLER = 0.9;
-            armAnglerPos -= gamepad2.right_trigger * 10;
-        }
-
-        if (armAnglerMotorPower < -0.4) {
-            ARM_SPEED_ANGLER = 0.9;
-            armAnglerPos += gamepad2.left_trigger * 10;
-        }
-
-        if (armAnglerPos > 0)
-        {
-            armAnglerPos = 0;
-        }
-
-        if (armAnglerPos < -1450)
-        {
-            armAnglerPos = -1450;
-        }
-
-//        if (gamepad1.x || gamepad2.x)
-//        {
-//            armAnglerPos = -1300;
-//        }
-//
-//        if (gamepad1.b || gamepad2.b)
-//        {
-//            armAnglerPos = 0;
-//        }
-
-        robot.armMover1.setPower(0.8);
-        robot.armMover1.setTargetPosition(armAnglerPos);
-        robot.armMover1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.armMover1.setPower(ARM_SPEED_ANGLER);
-
-        robot.armMover2.setPower(0.8);
-        robot.armMover2.setTargetPosition(-armAnglerPos);
-        robot.armMover2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.armMover2.setPower(ARM_SPEED_ANGLER);
-
-
-        //armMover
-        double armMotorPower = gamepad1.right_trigger - gamepad1.left_trigger;
-        if (armMotorPower > 0.4) {
-            ARM_SPEED = 0.9;
-            armPos += gamepad1.right_trigger * 60.0;
-        }
-
-        if (armMotorPower < -0.4) {
-            ARM_SPEED = 0.9;
-            armPos -= gamepad1.left_trigger * 60;
-        }
-
-        if (armPos > 4300)
-        {
-            armPos = 4300;
-        }
-
-
-        if (armPos < 0)
-        {
-            armPos = 0;
-            ARM_SPEED = 0;
-        }
-
-        if (gamepad1.y || gamepad2.y)
-        {
-            armPos = 2500;
-        }
-        if (gamepad1.a || gamepad2.a)
-        {
-            armPos = 0;
-        }
-
-
-
-
-        //armMover Action
-        robot.arm1.setPower(armMotorPower); //try to delete this see what happens big fella
-        robot.arm1.setTargetPosition(armPos);
-        robot.arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.arm1.setPower(ARM_SPEED);
-
-        robot.arm2.setPower(armMotorPower);
-        robot.arm2.setTargetPosition(-armPos);
-        robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.arm2.setPower(ARM_SPEED);
-
-
-
-        //show info slowbro (like the pokemon)
-        telemetry.addLine("Wheels");
-
-//        telemetry.addData("Left Front Power", leftFrontPower);
-//        telemetry.addData("Left Rear Power", leftRearPower);
-//        telemetry.addData("Right Front Power", rightFrontPower);
-//        telemetry.addData("Right Rear Power", rightRearPower);
-
-        telemetry.addLine("");
-        telemetry.addLine("armMotorSpeeds");
-
-        telemetry.addData("armSpeed", ARM_SPEED);
-        telemetry.addData("SpeedArmAngler", ARM_SPEED_ANGLER);
-
-        telemetry.addLine("");
-        telemetry.addLine("armPos");
-
-        telemetry.addLine("Arm " + armPos);
-        telemetry.addData("Arm 2", dumbArmPos);
-
-        telemetry.addLine("");
-        telemetry.addLine("ArmAnglers");
-
-        telemetry.addLine("ArmAngler " + armAnglerPos);
-        telemetry.addData("ArmAngler 2", dumbArmAnglerPos);
-
     }
 
     /*

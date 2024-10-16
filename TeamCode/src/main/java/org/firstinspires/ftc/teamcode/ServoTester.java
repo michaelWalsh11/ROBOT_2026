@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-@TeleOp(name="Servo fella big man", group="Training")
+@TeleOp(name="HUNTER RUN THIS RN", group="Training")
 //@Disabled
 public class ServoTester extends OpMode {
 
@@ -30,20 +30,6 @@ public class ServoTester extends OpMode {
         telemetry.addData("Say", "Robot Ready");    //
 
         // Set to Run without Encoder for Tele Operated
-        robot.leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        robot.armMover1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.armMover1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.armMover2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.armMover2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        robot.arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.arm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
     }
@@ -81,18 +67,28 @@ public class ServoTester extends OpMode {
 
 
         //claw open random guesses needs to be tuned
+        double x = robot.rightHand.getPosition();
 
-
-        if (gamepad1.dpad_left)
+        if (gamepad2.right_trigger > 0.4)
         {
-            robot.spinner.setPosition(0);
+            robot.rightHand.setPosition(0.5);
+            robot.leftHand.setPosition(1);
         }
-        if (gamepad1.dpad_right)
+        if (gamepad2.left_trigger > 0.4)
         {
-            robot.spinner.setPosition(1);
+            robot.rightHand.setPosition(1);
+            robot.leftHand.setPosition(0.5);
         }
 
-        telemetry.addLine("Hello Hunter!");
+        if (gamepad2.dpad_up)
+        {
+            robot.rightHand.setPosition(x += 0.009);
+        }
+        if (gamepad2.dpad_down)
+        {
+            robot.rightHand.setPosition(x -= 0.009);
+        }
+        telemetry.addLine("Hello Hunter!" + x);
 
 
     }

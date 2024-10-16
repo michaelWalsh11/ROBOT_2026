@@ -185,6 +185,11 @@ public class RobotBackground {
         period.reset();
     }
 
+    public void moveArm(double inches, double speed)
+    {
+
+    }
+
     // Additional Functions to control Servos and motors
 
     public void driveStraightInches(double speed,
@@ -210,7 +215,7 @@ public class RobotBackground {
         rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Set to Limit of DRIVE_SPEED
-        if (Math.abs(speed) > DRIVE_SPEED) {
+        if (speed > DRIVE_SPEED) {
             speed = DRIVE_SPEED; //
         }
 
@@ -436,55 +441,69 @@ public class RobotBackground {
         }
     }
 
-    public void leftArmMotorDeg(double speed,
-                                double deg,
-                                double timeoutS) {
+    public void armsMoveToPos(double speed, int pos) {
         int target;
 
-        //leftArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        //leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Set to Limit of DRIVE_SPEED
-        if (Math.abs(speed) > DRIVE_SPEED) {
-            speed = DRIVE_SPEED; //
-        }
-
-        // Ensure that the opmode is still active
-        //if (opModeIsActive()) {
-        if (true) {       // Swapped out to include in MaristBaseRobot
+        if (true) {
 
             // Determine new target position, and pass to motor controller
-            //target = leftArm.getCurrentPosition() + (int)(deg * COUNTS_PER_DEGREE);
-            //leftArm.setTargetPosition(target);
+            arm1.setTargetPosition(pos);
+            arm2.setTargetPosition(pos);
 
-            // Turn On RUN_TO_POSITION
-            //leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             period.reset();
-            //leftArm.setPower(Math.abs(speed));
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            // while ((period.seconds() < timeoutS) &&
-            //         //leftArm.isBusy()) {
-            //     // Wait for Sequence to complete
-            // }
-
-            // Stop all motion: Comment out if you want Motor to hold position
-            //leftArm.setPower(0);
-
-            // Turn off RUN_TO_POSITION: Comment out if you want Motor to hold position
-            //leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-            //  sleep(250);   // optional pause after each move
+            arm1.setPower(speed);
+            arm2.setPower(speed);
         }
 
+    }
+
+    public void armsMoveToVert(double speed, int pos) {
+        int target;
+
+        armMover1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMover1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        armMover2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMover2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        if (true) {
+
+            // Determine new target position, and pass to motor controller
+            armMover1.setTargetPosition(pos);
+            armMover2.setTargetPosition(pos);
+
+            armMover1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            armMover2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            period.reset();
+            armMover1.setPower(speed);
+            armMover2.setPower(speed);
+        }
+
+    }
+
+    public void openGrasper()
+    {
+        rightHand.setPosition(0.5);
+        leftHand.setPosition(1);
+    }
+
+    public void closeGrasper()
+    {
+        rightHand.setPosition(1);
+        leftHand.setPosition(0.5);
     }
 
     public void rightArmMotorDeg(double speed,
