@@ -71,22 +71,29 @@ public class ServoTester extends OpMode {
 
         if (gamepad2.right_trigger > 0.4)
         {
-            robot.rightHand.setPosition(0.5);
-            robot.leftHand.setPosition(1);
+            robot.rotator.setPosition(0);
         }
         if (gamepad2.left_trigger > 0.4)
         {
-            robot.rightHand.setPosition(1);
-            robot.leftHand.setPosition(0.5);
+            robot.rotator.setPosition(1);
         }
 
-        if (gamepad2.dpad_up)
+        if (gamepad2.a)
         {
-            robot.rightHand.setPosition(x += 0.009);
+            robot.rotator.setPosition(0);
         }
-        if (gamepad2.dpad_down)
+        if (gamepad2.y)
         {
-            robot.rightHand.setPosition(x -= 0.009);
+            robot.rotator.setPosition(1);
+        }
+
+        if (gamepad2.b)
+        {
+            robot.spinner.setPosition(0);
+        }
+        if (gamepad2.x)
+        {
+            robot.spinner.setPosition(1);
         }
         telemetry.addLine("Hello Hunter!" + x);
 
