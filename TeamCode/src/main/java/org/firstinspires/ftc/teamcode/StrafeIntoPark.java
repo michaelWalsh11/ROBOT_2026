@@ -17,7 +17,7 @@ public class StrafeIntoPark extends LinearOpMode {
 
         if (opModeIsActive())
         {
-            robot.strafe(48, 0.5);
+            robot.strafe(-40, 0.5);
         }
     }
 }

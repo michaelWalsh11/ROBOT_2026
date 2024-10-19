@@ -29,6 +29,9 @@ public class DriveBasic extends OpMode {
 
     private int toggle = 0;
 
+    private boolean rand1 = false;
+    private boolean rand2 = false;
+
     private boolean bump1 = false;
     private boolean bump2 = false;
 
@@ -42,7 +45,7 @@ public class DriveBasic extends OpMode {
     private int rotateArm;
     private double topRungArm_Speed;
 
-    private double DRIVE_SPEED = 0.5;
+    private double DRIVE_SPEED = 1.0;
 
     private double CLIMB_POWER = 0.8;
 
@@ -161,29 +164,16 @@ public class DriveBasic extends OpMode {
 
     public void armMover(int amp, int number)
     {
-        if (number == 0) {
             //armMover Action
-            robot.arm1.setPower(1.0);
-            robot.arm1.setTargetPosition(amp);
-            robot.arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.arm1.setPower(ARM_SPEED);
+        robot.arm1.setPower(1.0);
+        robot.arm1.setTargetPosition(amp);
+        robot.arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.arm1.setPower(ARM_SPEED);
 
-            robot.arm2.setPower(1.0);
-            robot.arm2.setTargetPosition(-amp);
-            robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.arm2.setPower(ARM_SPEED);
-        }
-        if (number == 1) {
-            // Move the arm manually based on gamepad2 input
-            double armManualPower = 1.0;
-            robot.arm1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            robot.arm1.setPower(armManualPower);
-
-            robot.arm2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            robot.arm2.setPower(-armManualPower);
-
-            armPos = Math.abs(robot.arm1.getCurrentPosition());
-        }
+        robot.arm2.setPower(1.0);
+        robot.arm2.setTargetPosition(-amp);
+        robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.arm2.setPower(ARM_SPEED);
     }
 
 
@@ -191,12 +181,12 @@ public class DriveBasic extends OpMode {
     {
         if (gamepad2.dpad_up)
         {
-            ARM_SPEED_ANGLER = 1.0;
-            armAnglerPos += 12;
+            ARM_SPEED = 1.0;
+            armPos += 12;
         }
         if (gamepad2.dpad_down) {
-            ARM_SPEED_ANGLER = 1.0;
-            armAnglerPos -= 12;
+            ARM_SPEED = 1.0;
+            armPos -= 12;
         }
 
         if (armAnglerPos > 0)
@@ -204,30 +194,36 @@ public class DriveBasic extends OpMode {
             armAnglerPos = 0;
         }
 
+        if (gamepad1.x)
+        {
+            armPos = 270;
+            armAnglerPos = -140;
+        }
+
         if (armAnglerPos < -1450)
         {
             armAnglerPos = -1450;
         }
 
-        if (gamepad1.b && !gamepad1.start)
-        {
-            armPos = 0;
-            armMover(armPos, number);
-        }
-
-        if (gamepad1.x)
+        if (gamepad2.b && !gamepad2.start)
         {
             armPos = 3700;
             armMover(armPos, number);
         }
 
-        if (gamepad1.y) {
+        if (gamepad2.x)
+        {
+            armPos = 0;
+            armMover(armPos, number);
+        }
+
+        if (gamepad2.y) {
             armAnglerPos = -1175;  // Move arm angler to preset position
             armAnglerMover(armAnglerPos); // Move arm angler
             toggle = 4300;
         }
 
-        if (gamepad1.a && !gamepad1.start) {
+        if (gamepad2.a && !gamepad2.start) {
             armAnglerPos = 0;  // Reset arm angler position
             armAnglerMover(armAnglerPos);
             toggle = 1650;
@@ -247,13 +243,13 @@ public class DriveBasic extends OpMode {
         //armMover
         double armMotorPower = gamepad2.left_stick_y;
         if (armMotorPower > 0.4) {
-            ARM_SPEED = 1.0;
-            armPos += (int) (gamepad1.left_stick_y * 60.0);
+            ARM_SPEED_ANGLER = 1.0;
+            armAnglerPos += (int) (gamepad2.left_stick_y * 15.0);
         }
 
         if (armMotorPower < -0.4) {
-            ARM_SPEED = 1.0;
-            armPos -= (int) (Math.abs(gamepad1.left_stick_y) * 60.0);
+            ARM_SPEED_ANGLER = 1.0;
+            armAnglerPos -= (int) (Math.abs(gamepad2.left_stick_y) * 15.0);
         }
 
         if (armPos > toggle)
@@ -267,25 +263,6 @@ public class DriveBasic extends OpMode {
         {
             armPos = 0;
             ARM_SPEED = 0;
-        }
-
-        if (gamepad2.x && number == 0 && !random)
-        {
-            random = true;
-            number = 1;
-        }
-        else if (!gamepad2.x) {
-            random = false;
-        }
-
-        if (gamepad2.x && number == 1 && !random2)
-        {
-            random2 = true;
-            number = 0;
-        }
-        else if (!gamepad2.x)
-        {
-            random2 = false;
         }
 
         armMover(armPos, number);
@@ -308,11 +285,11 @@ public class DriveBasic extends OpMode {
         }
 
         //twist left and right
-        if (gamepad2.left_bumper)
+        if (gamepad2.right_bumper)
         {
             spinPos = Math.min(spinPos + 0.01, 1.0);;
         }
-        if (gamepad2.right_bumper)
+        if (gamepad2.left_bumper)
         {
             spinPos = Math.max(spinPos - 0.01, 0.0);
         }
@@ -339,6 +316,22 @@ public class DriveBasic extends OpMode {
         double leftX;
         double leftY;
         double rightX;
+
+        if (DRIVE_SPEED == 1.0 && gamepad1.a && !rand1)
+        {
+            DRIVE_SPEED = 0.4;
+            rand1 = true;
+        }
+        if (DRIVE_SPEED == 0.4 && gamepad1.a && !rand1)
+        {
+            DRIVE_SPEED = 1.0;
+            rand1 = true;
+        }
+
+        if (!gamepad1.a)
+        {
+            rand1 = false;
+        }
 
         leftX = gamepad1.left_stick_x * DRIVE_SPEED;
         leftY = gamepad1.left_stick_y * DRIVE_SPEED;

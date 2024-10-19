@@ -17,26 +17,35 @@ public class OneBlock extends LinearOpMode {
 
         if (opModeIsActive())
         {
-            robot.closeGrasper();
 
-            robot.move(50, 0.8);
-            robot.armsMoveToVert(0.8, 700);
-            robot.armsMoveToPos(0.8, 2500);
+            robot.move(5, 0.8);
+            robot.armsMoveToVert(0.8, -1000);
+            robot.armsMoveToPos(0.8, 1000);
+
+//            robot.closeGrasper();
 
             robot.waitForTick(3000); // 3 seconds?
 
-            robot.armsMoveToPos(0.8, 2100);
-            robot.openGrasper();
+            robot.move(2, 0.8);
 
-            robot.waitForTick(1000);
-
-            robot.move(-50, 0.8);
-            robot.armsMoveToVert(0.8, 0);
-            robot.armsMoveToPos(0.8, 0);
+            robot.rotator.setPosition(0.75);
 
             robot.waitForTick(3000);
 
-            robot.strafe(48, 0.8);
+            robot.armsMoveToPos(0.8, -300);
+            robot.closeGrasper();
+
+            robot.waitForTick(3000);
+//
+//            robot.waitForTick(1000);
+//
+//            robot.move(-10, 0.8);
+//            robot.armsMoveToVert(0.8, 1000);
+//            robot.armsMoveToPos(0.8, -1700);
+//
+//            robot.waitForTick(3000);
+//
+//            robot.strafe(40, 0.8);
         }
     }
 }

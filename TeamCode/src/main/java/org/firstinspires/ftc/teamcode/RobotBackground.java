@@ -454,7 +454,7 @@ public class RobotBackground {
 
             // Determine new target position, and pass to motor controller
             arm1.setTargetPosition(pos);
-            arm2.setTargetPosition(pos);
+            arm2.setTargetPosition(-pos);
 
             arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -481,7 +481,7 @@ public class RobotBackground {
 
             // Determine new target position, and pass to motor controller
             armMover1.setTargetPosition(pos);
-            armMover2.setTargetPosition(pos);
+            armMover2.setTargetPosition(-pos);
 
             armMover1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             armMover2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
