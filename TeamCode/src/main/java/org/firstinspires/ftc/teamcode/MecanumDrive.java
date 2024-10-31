@@ -63,32 +63,33 @@ public final class MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.UP;
 
         // drive model parameters
-        public double inPerTick = 5; // default = 1
-        public double lateralInPerTick = inPerTick;
-        public double trackWidthTicks = 0;
+        public double inPerTick = 0.00195483; // 511.554167 in the inverse
+        public double lateralInPerTick = 0.0012558283848503203;
+        public double trackWidthTicks = 7000.517367943171;
 
         // feedforward parameters (in tick units)
-        public double kS = 100; // default = 0
-        public double kV = 100; // default = 0
-        public double kA = 100; // default = 0
+        public double kS = 1.708644258831641; // default = 0
+        public double kV = 0.0003892397090374108; // default = 0
+        public double kA =  0.00006; // default = 0       //change by factor of 10 until
+                                                            // shows a severe difference
 
         // path profile parameters (in inches)
-        public double maxWheelVel = 50;
-        public double minProfileAccel = -30;
-        public double maxProfileAccel = 50;
+        public double maxWheelVel = 20;
+        public double minProfileAccel = -20;
+        public double maxProfileAccel = 20;
 
         // turn profile parameters (in radians)
         public double maxAngVel = Math.PI; // shared with path
         public double maxAngAccel = Math.PI;
 
         // path controller gains defaults = 0.0
-        public double axialGain = 2.0;
+        public double axialGain = 5.0;
         public double lateralGain = 2.0;
-        public double headingGain = 2.0; // shared with turn
+        public double headingGain = 4.25; // shared with turn
 
-        public double axialVelGain = 2.0;
-        public double lateralVelGain = 2.0;
-        public double headingVelGain = 2.0; // shared with turn
+        public double axialVelGain = 0.0;
+        public double lateralVelGain = 0.0;
+        public double headingVelGain = 0.0; // shared with turn
     }
 
 
@@ -229,8 +230,11 @@ public final class MecanumDrive {
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        //leftFront.setDirection();
+
         // TODO: reverse motor directions if needed
-        //   leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
@@ -239,7 +243,7 @@ public final class MecanumDrive {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        localizer = new DriveLocalizer();
+        localizer = new ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick);
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
     }

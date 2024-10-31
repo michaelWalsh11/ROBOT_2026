@@ -234,64 +234,64 @@ public class ImageFinder extends LinearOpMode {
                             new Scalar(255, 0, 0), 2);  // Blue contour box
                 }
             }
-            double leftX;
-
-            int mid = closestToMid - 320;
-            if (mid > 15 && mid < 10000) {
-                leftX = 0.1;
-            }
-            else if (mid < -15) {
-                leftX = -0.1;
-            }
-            else {
-                leftX = 0;
-            }
-
-            double leftRearPower = leftX;
-            double leftFrontPower = -leftX;
-            double rightRearPower = -leftX;
-            double rightFrontPower = leftX;
-
-            robot.leftFront.setPower(leftFrontPower);
-            robot.leftRear.setPower(leftRearPower);
-            robot.rightFront.setPower(rightFrontPower);
-            robot.rightRear.setPower(rightRearPower);
-
-            //todo
-            // make it so that if the wristPos != to the pos where it is facing down then keep moving the arm forward
-            int mid2 = closestToMidY - 240;
-            if (mid2 > 15 && mid2 < 10000 || centerWristPos == wristPos)
-            {
-                armPos += armAcceleration;
-            }
-            else if (mid2 < -15)
-            {
-                wristPos += wristAcceleration;
-            }
-            else {
-                armPos += 0;
-                wristPos += 0;
-            }
-
-            if (armPos < 0)
-            {
-                armPos = 0;
-            }
-
-            robot.rotator.setPosition(wristPos);
-
-            robot.armMover1.setTargetPosition(armPos);
-            robot.armMover1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.armMover1.setPower(0.8);
-
-            robot.armMover2.setTargetPosition(-armPos);
-            robot.armMover2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.armMover2.setPower(0.8);
-
-            // Use telemetry instead of print statements
-            telemetry.addData("Closest Contour X ", mid);
-            telemetry.addData("Closest Contour Y ", mid2);
-            telemetry.addData("ArmPos ", armPos);
+//            double leftX;
+//
+//            int mid = closestToMid - 320;
+//            if (mid > 15 && mid < 10000) {
+//                leftX = 0.1;
+//            }
+//            else if (mid < -15) {
+//                leftX = -0.1;
+//            }
+//            else {
+//                leftX = 0;
+//            }
+//
+//            double leftRearPower = leftX;
+//            double leftFrontPower = -leftX;
+//            double rightRearPower = -leftX;
+//            double rightFrontPower = leftX;
+//
+//            robot.leftFront.setPower(leftFrontPower);
+//            robot.leftRear.setPower(leftRearPower);
+//            robot.rightFront.setPower(rightFrontPower);
+//            robot.rightRear.setPower(rightRearPower);
+//
+//            //todo
+//            // make it so that if the wristPos != to the pos where it is facing down then keep moving the arm forward
+//            int mid2 = closestToMidY - 240;
+//            if (mid2 > 15 && mid2 < 10000 || centerWristPos == wristPos)
+//            {
+//                armPos += armAcceleration;
+//            }
+//            else if (mid2 < -15)
+//            {
+//                wristPos += wristAcceleration;
+//            }
+//            else {
+//                armPos += 0;
+//                wristPos += 0;
+//            }
+//
+//            if (armPos < 0)
+//            {
+//                armPos = 0;
+//            }
+//
+//            robot.rotator.setPosition(wristPos);
+//
+//            robot.armMover1.setTargetPosition(armPos);
+//            robot.armMover1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            robot.armMover1.setPower(0.8);
+//
+//            robot.armMover2.setTargetPosition(-armPos);
+//            robot.armMover2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            robot.armMover2.setPower(0.8);
+//
+//            // Use telemetry instead of print statements
+//            telemetry.addData("Closest Contour X ", mid);
+//            telemetry.addData("Closest Contour Y ", mid2);
+//            telemetry.addData("ArmPos ", armPos);
         }
     }
 }

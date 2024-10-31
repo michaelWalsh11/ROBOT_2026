@@ -196,8 +196,10 @@ public class DriveBasic extends OpMode {
 
         if (gamepad1.x)
         {
-            armPos = 270;
             armAnglerPos = -140;
+            robot.waitForTick(3000);
+            armPos = 270;
+            //armAnglerPos = -140;
         }
 
         if (armAnglerPos < -1450)
