@@ -55,8 +55,7 @@ import java.util.List;
 public final class MecanumDrive {
     public static class Params {
         // IMU orientation
-        // TODO: fill in these values based on
-        //   see https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting
+
         public RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection =
                 RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
         public RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection =
@@ -71,7 +70,7 @@ public final class MecanumDrive {
         public double kS = 1.708644258831641; // default = 0
         public double kV = 0.0003892397090374108; // default = 0
         public double kA =  0.00006; // default = 0       //change by factor of 10 until
-                                                            // shows a severe difference
+        // shows a severe difference
 
         // path profile parameters (in inches)
         public double maxWheelVel = 20;
@@ -141,8 +140,6 @@ public final class MecanumDrive {
 
             imu = lazyImu.get();
 
-            // TODO: reverse encoders if needed
-            //   leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
         @Override

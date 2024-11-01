@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.Pose2d;
@@ -6,8 +7,8 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Odo Auto Hang straight (pray)", group="Autonomous")
-public final class TestOdometryAuto124 extends LinearOpMode
+@Autonomous(name="Odo Auto put it on and put  it in (bucket) - Hunter Nguyen a.k.a some bs", group="Autonomous")
+public final class OdoAuto1plus1 extends LinearOpMode
 {
     @Override
     public void runOpMode() {
@@ -32,12 +33,37 @@ public final class TestOdometryAuto124 extends LinearOpMode
         go.openGrasper();
         go.waitCommand(1000);
 
+        go.armsPos(0, 0);
+
         Actions.runBlocking(drive.actionBuilder(pose)
-                .lineToX(0)
+                .splineTo(new Vector2d(0, 24), Math.toRadians(90))
                 .build());
 
         pose = drive.pose;
 
-        go.waitCommand(2000);
+        go.armsPos(4000, 1400);
+
+        Actions.runBlocking(drive.actionBuilder(pose)
+                .lineToY(30)
+                .build());
+
+        pose = drive.pose;
+
+        go.waitCommand(3000);
+        go.openGrasper();
+        go.waitCommand(1000);
+
+        Actions.runBlocking(drive.actionBuilder(pose)
+                .lineToY(24)
+                .build());
+
+        pose = drive.pose;
+
+        go.vertArmToPos(0);
+        go.waitCommand(1000);
+        go.horArmToPos(0);
+
+        go.waitCommand(3000);
+
     }
 }
