@@ -14,7 +14,6 @@ public final class OdoAuto1plus1 extends LinearOpMode
     public void runOpMode() {
         Pose2d pose = new Pose2d(0, 0, 0);
         MecanumDrive drive = new MecanumDrive(hardwareMap, pose);
-        RobotBackground robot = new RobotBackground();
         AutoCommands go = new AutoCommands();
 
         waitForStart();
@@ -23,7 +22,7 @@ public final class OdoAuto1plus1 extends LinearOpMode
         go.armsPos(1000, 1000);
 
         Actions.runBlocking(drive.actionBuilder(pose)
-                .lineToX(24)
+                .lineToXConstantHeading(24)
                 .build());
 
         pose = drive.pose;
@@ -36,15 +35,18 @@ public final class OdoAuto1plus1 extends LinearOpMode
         go.armsPos(0, 0);
 
         Actions.runBlocking(drive.actionBuilder(pose)
-                .splineTo(new Vector2d(0, 24), Math.toRadians(90))
+                .lineToX(20)
+                .splineTo(new Vector2d(12, 24), Math.toRadians(90))
                 .build());
 
         pose = drive.pose;
 
+        go.closeGrasper();
         go.armsPos(4000, 1400);
 
         Actions.runBlocking(drive.actionBuilder(pose)
-                .lineToY(30)
+                .lineToXConstantHeading(0)
+                .lineToYConstantHeading(30)
                 .build());
 
         pose = drive.pose;
@@ -54,7 +56,7 @@ public final class OdoAuto1plus1 extends LinearOpMode
         go.waitCommand(1000);
 
         Actions.runBlocking(drive.actionBuilder(pose)
-                .lineToY(24)
+                .lineToYConstantHeading(24)
                 .build());
 
         pose = drive.pose;
