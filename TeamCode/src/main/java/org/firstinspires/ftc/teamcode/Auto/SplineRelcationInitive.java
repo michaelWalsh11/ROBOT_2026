@@ -2,8 +2,14 @@ package org.firstinspires.ftc.teamcode.Auto;
 
 import android.app.Notification;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Trajectory;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -20,32 +26,30 @@ public final class SplineRelcationInitive extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Pose2d beginPose = new Pose2d(0, 0, 90);
         if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
-            RobotBackground robot = new RobotBackground();
 
+            RobotBackground robot = new RobotBackground();
             MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
             AutoCommands go = new AutoCommands(hardwareMap);
 
-            //Trajectory one = drive.actionBuilder(beginPose).lineToYConstantHeading(20, 0);
+            TrajectoryActionBuilder tab1 = drive.actionBuilder(beginPose)
+                    .lineToYConstantHeading(20);
+
+            //beginPose = new Pose2d(0, 20, 90);
+
+            TrajectoryActionBuilder tab2 = drive.actionBuilder(beginPose)
+                    .lineToYConstantHeading(0);
+
             waitForStart();
 
-            //go.closeGrasper();
-            drive.actionBuilder(beginPose)
-                    .lineToYConstantHeading(20)
-                    //.lineToYConstantHeading(0)
-                    .build();
 
             Actions.runBlocking(
                     new SequentialAction(
-                            trajectoryActionChosen,
-                            go.openGrasper(),
-                            go.armsPos(1000, 1000),
-                            trajectoryActionCloseOut
+                            tab1.build(),
+                            go.closeClaw(),
+                            tab2.build()
                     )
             );
 
-            go.armsPos(1000, 1000);
-//
-            //go.waitCommand(3000);
             while (opModeIsActive())
             {
 

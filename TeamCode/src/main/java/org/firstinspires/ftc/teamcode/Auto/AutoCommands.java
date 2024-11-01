@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -16,6 +20,28 @@ public class AutoCommands {
     public void graspAngler(double pos)
     {
         robot.spinner.setPosition(pos);
+    }
+
+
+
+    public class CloseGrasper implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            robot.rightHand.setPosition(1);
+            robot.leftHand.setPosition(0.5);
+            return false;
+        }
+    }
+    public Action closeClaw() {
+        return new CloseGrasper();
+    }
+
+    public Action openGrasp()
+    {
+        robot.rightHand.setPosition(0.5);
+        robot.leftHand.setPosition(1);
+
+        return null;
     }
 
     public void openGrasper()
