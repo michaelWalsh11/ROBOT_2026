@@ -1,11 +1,13 @@
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Auto;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Autonomous(name="Odo Auto put it on and put  it in (bucket) - Hunter Nguyen a.k.a some bs", group="Autonomous")
 public final class OdoAuto1plus1 extends LinearOpMode
@@ -14,7 +16,7 @@ public final class OdoAuto1plus1 extends LinearOpMode
     public void runOpMode() {
         Pose2d pose = new Pose2d(0, 0, 0);
         MecanumDrive drive = new MecanumDrive(hardwareMap, pose);
-        AutoCommands go = new AutoCommands();
+        AutoCommands go = new AutoCommands(hardwareMap);
 
         waitForStart();
 

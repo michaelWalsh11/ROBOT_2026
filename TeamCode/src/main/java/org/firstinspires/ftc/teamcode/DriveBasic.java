@@ -287,11 +287,11 @@ public class DriveBasic extends OpMode {
         }
 
         //twist left and right
-        if (gamepad2.right_bumper)
+        if (gamepad2.left_bumper)
         {
             spinPos = Math.min(spinPos + 0.01, 1.0);;
         }
-        if (gamepad2.left_bumper)
+        if (gamepad2.right_bumper)
         {
             spinPos = Math.max(spinPos - 0.01, 0.0);
         }

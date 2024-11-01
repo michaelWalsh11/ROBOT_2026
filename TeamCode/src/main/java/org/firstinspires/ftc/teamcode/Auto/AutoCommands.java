@@ -1,23 +1,21 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.teamcode.RobotBackground;
 
 public class AutoCommands {
     RobotBackground robot = new RobotBackground();
 
-    public AutoCommands()
+    public AutoCommands(HardwareMap hardwareMap)
     {
-        robot.arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.arm1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.init(hardwareMap);
+    }
 
-        robot.arm2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.arm2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        robot.armMover1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.armMover1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        robot.armMover2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.armMover2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    public void graspAngler(double pos)
+    {
+        robot.spinner.setPosition(pos);
     }
 
     public void openGrasper()
@@ -30,6 +28,11 @@ public class AutoCommands {
     {
         robot.rightHand.setPosition(1);
         robot.leftHand.setPosition(0.5);
+    }
+
+    public void die()
+    {
+        robot.rightHand.setPosition(0.0);
     }
 
     public void vertArmToPos(int pos)
