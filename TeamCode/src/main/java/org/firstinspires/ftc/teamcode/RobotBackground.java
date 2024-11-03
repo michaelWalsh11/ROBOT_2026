@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -50,22 +52,21 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 
 public class RobotBackground {
     /* Public Motors and Servos */
-    public DcMotor leftFront   = null;
-    public DcMotor rightFront  = null;
-    public DcMotor leftRear    = null;
-    public DcMotor rightRear   = null;
-    public DcMotor arm1    = null;
-    public DcMotor arm2     = null;
-    public DcMotor armMover1    = null;
-    public DcMotor armMover2     = null;
-    public Servo rightHand    = null;
-    public Servo leftHand   = null;
+    public DcMotor leftFront = null;
+    public DcMotor rightFront = null;
+    public DcMotor leftRear = null;
+    public DcMotor rightRear = null;
+    public DcMotor arm1 = null;
+    public DcMotor arm2 = null;
+    public DcMotor armMover1 = null;
+    public DcMotor armMover2 = null;
+    public Servo rightHand = null;
+    public Servo leftHand = null;
     public Servo rotator = null;
     public Servo spinner = null;
 
-    public   IMU imu;
+    public IMU imu;
     public double offset = 0;//in degrees
-
 
 
     /* Public Sensors */
@@ -73,26 +74,26 @@ public class RobotBackground {
     public NormalizedColorSensor colorSensor = null;
 
     // Constants for Arm and Servo Operation
-    public static final double MID_SERVO        =  0.5;
-    public static final double ARM_UP_POWER     =  2.00;
-    public static final double ARM_DOWN_POWER   = -2.00;
+    public static final double MID_SERVO = 0.5;
+    public static final double ARM_UP_POWER = 2.00;
+    public static final double ARM_DOWN_POWER = -2.00;
 
     // For Encoder Functions
-    private double     COUNTS_PER_MOTOR_REV          = 1440 ;    // eg: TETRIX Motor Encoder
-    private final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
-    private double     WHEEL_DIAMETER_INCHES         = 4.0 ;     // For figuring circumference
-    private double     COUNTS_PER_INCH               = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    private double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
+    private final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
+    private double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+    private double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    private double COUNTS_PER_DEGREE                 = COUNTS_PER_MOTOR_REV / 360;
-    private double     DRIVE_SPEED                   = 0.6;
-    private double     TURN_SPEED                    = 0.5;
+    private double COUNTS_PER_DEGREE = COUNTS_PER_MOTOR_REV / 360;
+    private double DRIVE_SPEED = 0.6;
+    private double TURN_SPEED = 0.5;
 
     // Local OpMode members
     HardwareMap hwMap = null;
     private ElapsedTime period = new ElapsedTime();
 
     // Constructor - leave this blank for now
-    public RobotBackground () {
+    public RobotBackground() {
 
     }
 
@@ -102,14 +103,14 @@ public class RobotBackground {
         hwMap = ahwMap;
 
         // Define and Initialize Motors.  Assign Names that match the setup on the RC Phone
-        leftFront   = hwMap.dcMotor.get("leftFront");
-        rightFront  = hwMap.dcMotor.get("rightFront");
-        leftRear     = hwMap.dcMotor.get("leftBack");
-        rightRear    = hwMap.dcMotor.get("rightBack");
-        arm1      = hwMap.dcMotor.get("arm1");
-        armMover1     = hwMap.dcMotor.get("armMover1");
-        arm2      = hwMap.dcMotor.get("arm2");
-        armMover2     = hwMap.dcMotor.get("armMover2");
+        leftFront = hwMap.dcMotor.get("leftFront");
+        rightFront = hwMap.dcMotor.get("rightFront");
+        leftRear = hwMap.dcMotor.get("leftBack");
+        rightRear = hwMap.dcMotor.get("rightBack");
+        arm1 = hwMap.dcMotor.get("arm1");
+        armMover1 = hwMap.dcMotor.get("armMover1");
+        arm2 = hwMap.dcMotor.get("arm2");
+        armMover2 = hwMap.dcMotor.get("armMover2");
         //rightHand     = hwMap.servo.get("unknown");
         leftFront.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightFront.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
@@ -150,7 +151,7 @@ public class RobotBackground {
 
         // Define for Orientation of REV Control Hub
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.UP;
+        RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.UP;
 
         // Initialize the IMU
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
@@ -170,7 +171,7 @@ public class RobotBackground {
      */
     public void waitForTick(long periodMs) {
 
-        long  remaining = periodMs - (long)period.milliseconds();
+        long remaining = periodMs - (long) period.milliseconds();
 
         // sleep for the remaining portion of the regular cycle period.
         if (remaining > 0) {
@@ -185,16 +186,42 @@ public class RobotBackground {
         period.reset();
     }
 
-    public void moveArm(double inches, double speed)
-    {
+    public void moveArm(double inches, double speed) {
 
     }
 
     // Additional Functions to control Servos and motors
 
-    public void driveStraightInches(double speed,
-                                    double inches,
-                                    double timeoutS) {
+//    public void driveStraightInchesNoEncoder(double speed, double inches, double timeoutS) {
+//        // Convert inches to time based on speed
+//        // Calculate time in seconds to drive the specified distance at the given speed
+//        double timeToDrive = Math.abs(inches / (speed * inches)); // Adjust speed as needed to INCHES_PER_SECOND
+//
+//        // Set the motors to run at the specified speed
+//        leftFront.setPower(speed);
+//        rightFront.setPower(speed);
+//        leftRear.setPower(speed);
+//        rightRear.setPower(speed);
+//
+//        // Reset the period for the timeout
+//        period.reset();
+//
+//        // Keep driving until the timeout is reached or the desired time has passed
+//        while (opModeIsActive() && period.seconds() < Math.min(timeToDrive, timeoutS)) {
+//            // Optionally, add telemetry to monitor the driving action
+//            telemetry.addData("Driving", "Time elapsed: %.2f seconds", period.seconds());
+//            telemetry.update();
+//        }
+//
+//        // Stop all motion
+//        leftFront.setPower(0);
+//        rightFront.setPower(0);
+//        leftRear.setPower(0);
+//        rightRear.setPower(0);
+//    }
+
+
+    public void driveStraightInches(double speed, double inches, double timeoutS) {
         int newLeftFrontTarget;
         int newRightFrontTarget;
         int newLeftRearTarget;
@@ -203,77 +230,66 @@ public class RobotBackground {
         // Reverse inches
         inches = inches * -1;
 
-        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // Reset the encoders
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        // Set target positions
+        newLeftFrontTarget = leftFront.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+        newRightFrontTarget = rightFront.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+        newLeftRearTarget = leftRear.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+        newRightRearTarget = rightRear.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
 
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFront.setTargetPosition(newLeftFrontTarget);
+        rightFront.setTargetPosition(newRightFrontTarget);
+        leftRear.setTargetPosition(newLeftRearTarget);
+        rightRear.setTargetPosition(newRightRearTarget);
 
-        // Set to Limit of DRIVE_SPEED
-        if (speed > DRIVE_SPEED) {
-            speed = DRIVE_SPEED; //
+        // Set motor modes to RUN_TO_POSITION
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Set power to the motors
+        leftFront.setPower(Math.abs(speed));
+        rightFront.setPower(Math.abs(speed));
+        leftRear.setPower(Math.abs(speed));
+        rightRear.setPower(Math.abs(speed));
+
+        // Start a timer
+        period.reset();
+
+        // Loop until the timeout expires or all motors are no longer busy
+        while ((period.seconds() < timeoutS) &&
+                (leftFront.isBusy() && rightFront.isBusy() && leftRear.isBusy() && rightRear.isBusy())) {
+//            // Add telemetry for debugging
+//            telemetry.addData("LF Target", newLeftFrontTarget);
+//            telemetry.addData("RF Target", newRightFrontTarget);
+//            telemetry.addData("LR Target", newLeftRearTarget);
+//            telemetry.addData("RR Target", newRightRearTarget);
+//            telemetry.addData("LF Busy", leftFront.isBusy());
+//            telemetry.addData("RF Busy", rightFront.isBusy());
+//            telemetry.addData("LR Busy", leftRear.isBusy());
+//            telemetry.addData("RR Busy", rightRear.isBusy());
+//            telemetry.update();
         }
 
-        // Ensure that the opmode is still active
-        //if (opModeIsActive()) {
-        if (true) {       // Swapped out to include in MaristBaseRobot
+        // Stop all motion
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftRear.setPower(0);
+        rightRear.setPower(0);
 
-            // Determine new target position, and pass to motor controller
-            newLeftFrontTarget = leftFront.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
-            newRightFrontTarget = rightFront.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
-            newLeftRearTarget = leftRear.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
-            newRightRearTarget = rightRear.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
-
-            //
-            leftFront.setTargetPosition(newLeftFrontTarget);
-            rightFront.setTargetPosition(newRightFrontTarget);
-            leftRear.setTargetPosition(newLeftRearTarget);
-            rightRear.setTargetPosition(newRightRearTarget);
-
-            // Turn On RUN_TO_POSITION
-            leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            // reset the timeout time and start motion.
-            period.reset();
-            leftFront.setPower(Math.abs(speed));
-            rightFront.setPower(Math.abs(speed));
-            leftRear.setPower(Math.abs(speed));
-            rightRear.setPower(Math.abs(speed));
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while ((period.seconds() < timeoutS) &&
-                    (leftFront.isBusy() && rightFront.isBusy() && leftRear.isBusy() && rightRear.isBusy() )) {
-                // Wait for Sequence to complete
-            }
-
-            // Stop all motion;
-            leftFront.setPower(0);
-            rightFront.setPower(0);
-            leftRear.setPower(0);
-            rightRear.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-            //  sleep(250);   // optional pause after each move
-        }
+        // Turn off RUN_TO_POSITION
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
 
     public void pointTurnDegrees(double speed,
                                  double deg,
@@ -307,10 +323,10 @@ public class RobotBackground {
         if (true) {       // Swapped out to include in MaristBaseRobot
 
             // Determine new target position, and pass to motor controller
-            newLeftFrontTarget = leftFront.getCurrentPosition() + (int)(deg * COUNTS_PER_DEGREE);
-            newRightFrontTarget = rightFront.getCurrentPosition() - (int)(deg * COUNTS_PER_DEGREE);
-            newLeftRearTarget = leftRear.getCurrentPosition() + (int)(deg * COUNTS_PER_DEGREE);
-            newRightRearTarget = rightRear.getCurrentPosition() - (int)(deg * COUNTS_PER_DEGREE);
+            newLeftFrontTarget = leftFront.getCurrentPosition() + (int) (deg * COUNTS_PER_DEGREE);
+            newRightFrontTarget = rightFront.getCurrentPosition() - (int) (deg * COUNTS_PER_DEGREE);
+            newLeftRearTarget = leftRear.getCurrentPosition() + (int) (deg * COUNTS_PER_DEGREE);
+            newRightRearTarget = rightRear.getCurrentPosition() - (int) (deg * COUNTS_PER_DEGREE);
 
             //
             leftFront.setTargetPosition(newLeftFrontTarget);
@@ -338,7 +354,7 @@ public class RobotBackground {
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while ((period.seconds() < timeoutS) &&
-                    (leftFront.isBusy() && rightFront.isBusy() && leftRear.isBusy() && rightRear.isBusy() )) {
+                    (leftFront.isBusy() && rightFront.isBusy() && leftRear.isBusy() && rightRear.isBusy())) {
                 // Wait for Sequence to complete
             }
 
@@ -368,7 +384,7 @@ public class RobotBackground {
         int newRightRearTarget;
 
         // Reverse inches
-        inches = inches * -1 * (12.0/29);
+        inches = inches * -1 * (12.0 / 29);
 
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -390,10 +406,10 @@ public class RobotBackground {
         if (true) {       // Swapped out to include in MaristBaseRobot
 
             // Determine new target position, and pass to motor controller
-            newLeftFrontTarget = leftFront.getCurrentPosition() - (int)(inches * COUNTS_PER_INCH);
-            newRightFrontTarget = rightFront.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
-            newLeftRearTarget = leftRear.getCurrentPosition() + (int)(inches * COUNTS_PER_INCH);
-            newRightRearTarget = rightRear.getCurrentPosition() - (int)(inches * COUNTS_PER_INCH);
+            newLeftFrontTarget = leftFront.getCurrentPosition() - (int) (inches * COUNTS_PER_INCH);
+            newRightFrontTarget = rightFront.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+            newLeftRearTarget = leftRear.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+            newRightRearTarget = rightRear.getCurrentPosition() - (int) (inches * COUNTS_PER_INCH);
 
             //
             leftFront.setTargetPosition(newLeftFrontTarget);
@@ -421,7 +437,7 @@ public class RobotBackground {
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while ((period.seconds() < timeoutS) &&
-                    (leftFront.isBusy() && rightFront.isBusy() && leftRear.isBusy() && rightRear.isBusy() )) {
+                    (leftFront.isBusy() && rightFront.isBusy() && leftRear.isBusy() && rightRear.isBusy())) {
                 // Wait for Sequence to complete
             }
 
@@ -494,14 +510,12 @@ public class RobotBackground {
 
     }
 
-    public void openGrasper()
-    {
+    public void openGrasper() {
         rightHand.setPosition(0.5);
         leftHand.setPosition(1);
     }
 
-    public void closeGrasper()
-    {
+    public void closeGrasper() {
         rightHand.setPosition(1);
         leftHand.setPosition(0.5);
     }
@@ -616,7 +630,6 @@ public class RobotBackground {
     }
 
 
-
     // Functions for Color Sensor - July 2021
 
     // public float [] getColorValues() {
@@ -658,61 +671,14 @@ public class RobotBackground {
     //     return hsvValues[0];
     // }
     //added by Cole Saunders 22 Oct 23
-    public double getOrientation(){
+    public double getOrientation() {
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-        return orientation.getYaw(AngleUnit.DEGREES)-offset;
+        return orientation.getYaw(AngleUnit.DEGREES) - offset;
     }
-    public double resetImu(){
-        offset=  imu.getRobotYawPitchRollAngles().getYaw((AngleUnit.DEGREES));
+
+    public double resetImu() {
+        offset = imu.getRobotYawPitchRollAngles().getYaw((AngleUnit.DEGREES));
         return offset;
     }
 
-    public void driveFieldCentric(double gamepadXPow, double gamepadYPow, double gamepadRotPow, double DRIVE_SPEED){
-
-        double gamepadTheta = Math.atan2(gamepadYPow, gamepadXPow);
-        double diffTheta = gamepadTheta - Math.toRadians(getOrientation());
-
-        double xpow= Math.cos(diffTheta ) *DRIVE_SPEED;
-        double ypow= Math.sin(diffTheta)*DRIVE_SPEED;
-        double rotpow = gamepadRotPow*DRIVE_SPEED;
-
-        double leftRearPower = ypow+ xpow- rotpow ;
-        double leftFrontPower = ypow- xpow- rotpow ;
-        double rightRearPower = ypow- xpow+ rotpow ;
-        double rightFrontPower = ypow+ xpow+ rotpow ;
-
-        leftFront.setPower(leftFrontPower);
-        leftRear.setPower(leftRearPower);
-        rightFront.setPower(rightFrontPower);
-        rightRear.setPower(rightRearPower);
-
-
-    }
-
-    public void driveStrafer(double leftX, double leftY, double rightX) {
-
-        double leftFrontPower = leftY - leftX - rightX;
-        double leftRearPower = leftY + leftX - rightX;
-        double rightFrontPower = leftY + leftX + rightX;
-        double rightRearPower = leftY - leftX + rightX;
-
-        leftFront.setPower(leftFrontPower);
-        leftRear.setPower(leftRearPower);
-        rightFront.setPower(rightFrontPower);
-        rightRear.setPower(rightRearPower);
-
-    }
-
-    public void driveTank(double leftY, double rightY) {
-
-        leftFront.setPower(leftY);
-        leftRear.setPower(leftY);
-        rightFront.setPower(rightY);
-        rightRear.setPower(rightY);
-
-    }
-
-
 }
-
-

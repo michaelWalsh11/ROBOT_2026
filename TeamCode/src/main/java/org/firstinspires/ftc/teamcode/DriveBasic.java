@@ -274,6 +274,7 @@ public class DriveBasic extends OpMode {
 
     public void grasper()
     {
+
         //open and close grasper
         if (gamepad2.right_trigger > 0.4)
         {
@@ -302,11 +303,11 @@ public class DriveBasic extends OpMode {
         double RSY = gamepad2.right_stick_y;
         if (RSY > 0.4)
         {
-            servoPos = Math.min(servoPos + 0.01, 1.0);
+            servoPos = Math.min(servoPos + 0.04, 1.0);
         }
         if (RSY < -0.4)
         {
-            servoPos = Math.max(servoPos - 0.01, 0.0);
+            servoPos = Math.max(servoPos - 0.04, 0.0);
         }
 
         robot.rotator.setPosition(servoPos);

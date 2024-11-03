@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -7,10 +9,11 @@ import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.RRRB;
 import org.firstinspires.ftc.teamcode.RobotBackground;
 
 public class AutoCommands {
-    RobotBackground robot = new RobotBackground();
+    RRRB robot = new RRRB();
 
     public AutoCommands(HardwareMap hardwareMap)
     {
@@ -27,11 +30,32 @@ public class AutoCommands {
     public class CloseGrasper implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
+            // Check for null references
+            if (robot.rightHand == null || robot.leftHand == null) {
+                packet.put("Error", "Graspers not initialized");
+                telemetry.update(); // Make sure telemetry can be updated
+                return true; // End this action early
+            }
+
+            // Set positions for the graspers
             robot.rightHand.setPosition(1);
             robot.leftHand.setPosition(0.5);
-            return false;
+
+            // Update telemetry with positions
+            packet.put("rightHandPos", robot.rightHand.getPosition());
+            packet.put("leftHandPos", robot.leftHand.getPosition());
+
+            // It's crucial to update telemetry only if it's valid in this context
+            try {
+                telemetry.update();
+            } catch (Exception e) {
+                packet.put("TelemetryError", "Error updating telemetry: " + e.getMessage());
+            }
+
+            return true; // Return true to indicate this action has completed
         }
     }
+
     public Action closeClaw() {
         return new CloseGrasper();
     }
@@ -61,17 +85,55 @@ public class AutoCommands {
         robot.rightHand.setPosition(0.0);
     }
 
-    public void vertArmToPos(int pos)
-    {
-        robot.arm1.setTargetPosition(pos);
-        robot.arm2.setTargetPosition(-pos);
+//    public void vertArmToPos(int pos)
+//    {
+//        robot.arm1.setTargetPosition(pos);
+//        robot.arm2.setTargetPosition(-pos);
+//
+//        robot.arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//        robot.arm1.setPower(0.8);
+//        robot.arm2.setPower(0.8);
+//    }
 
-        robot.arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    public class VertArmToPos implements Action {
+        private int targetPos;
 
-        robot.arm1.setPower(0.8);
-        robot.arm2.setPower(0.8);
+        // Constructor to pass the target position
+        public VertArmToPos(int pos) {
+            this.targetPos = pos;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            robot.arm1.setTargetPosition(targetPos);
+            robot.arm2.setTargetPosition(-targetPos);
+
+            robot.arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            robot.arm1.setPower(0.8);
+            robot.arm2.setPower(0.8);
+
+            packet.put("Arm1 Target", targetPos);
+            packet.put("Arm2 Target", -targetPos);
+            packet.put("Arm1 Busy", robot.arm1.isBusy());
+            packet.put("Arm2 Busy", robot.arm2.isBusy());
+            telemetry.update();
+
+            return false;  // Update as necessary based on desired behavior (e.g., return true when done)
+        }
     }
+
+    // Method to return the action
+    public Action vertArmToPos(int pos) {
+        return new VertArmToPos(pos);
+    }
+
+
+
+
 
     public void vertArmToPosPower(int pos, double power)
     {

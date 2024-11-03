@@ -27,25 +27,23 @@ public final class SplineRelcationInitive extends LinearOpMode {
         Pose2d beginPose = new Pose2d(0, 0, 90);
         if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
 
-            RobotBackground robot = new RobotBackground();
+            //RobotBackground robot = new RobotBackground();
             MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
             AutoCommands go = new AutoCommands(hardwareMap);
 
             TrajectoryActionBuilder tab1 = drive.actionBuilder(beginPose)
                     .lineToYConstantHeading(20);
 
-            //beginPose = new Pose2d(0, 20, 90);
-
             TrajectoryActionBuilder tab2 = drive.actionBuilder(beginPose)
-                    .lineToYConstantHeading(0);
+                    .lineToYConstantHeading(10);
 
             waitForStart();
-
 
             Actions.runBlocking(
                     new SequentialAction(
                             tab1.build(),
                             go.closeClaw(),
+                            go.vertArmToPos(500),
                             tab2.build()
                     )
             );
